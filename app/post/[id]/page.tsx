@@ -17,9 +17,11 @@ export default async function PostDetailPage({
 }: {
   params: { id: string };
 }) {
+  const { id } = params;
+
   const postData = await withFallback(
-    () => getPostWithRepliesFromDatabase(params.id),
-    () => getPostWithRepliesFromMock(params.id),
+    () => getPostWithRepliesFromDatabase(id),
+    () => getPostWithRepliesFromMock(id),
     (error) => console.error("Failed to load post detail from database", error),
   );
 

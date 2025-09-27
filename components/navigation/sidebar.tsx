@@ -1,3 +1,7 @@
+"use client";
+
+import { useMemo } from "react";
+import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 
 export type NavItem = {
@@ -13,23 +17,47 @@ export type SidebarProps = {
 };
 
 export function Sidebar({ brandLabel, primaryActionLabel, navItems }: SidebarProps) {
+  const { user } = useUser();
+  const profileHref = useMemo(() => {
+    if (user?.username) return `/profile/${user.username}`;
+    if (user?.primaryEmailAddress?.emailAddress) {
+      return `/profile/${user.primaryEmailAddress.emailAddress.split("@")[0]}`;
+    }
+    return "/profile";
+  }, [user?.username, user?.primaryEmailAddress?.emailAddress]);
+
   return (
     <>
       <aside className="hidden w-60 flex-shrink-0 flex-col gap-2 md:flex">
-        <div className="text-2xl font-semibold text-sky-400">{brandLabel}</div>
+        <div className="flex items-center justify-between gap-4 text-2xl font-semibold text-sky-400">
+          <span>{brandLabel}</span>
+          <SignedIn>
+            <UserButton afterSignOutUrl="/" userProfileMode="modal" />
+          </SignedIn>
+          <SignedOut>
+            <SignInButton mode="modal">
+              <button className="rounded-full border border-sky-500 px-3 py-1 text-xs font-semibold text-sky-400 transition hover:bg-sky-500/10">
+                ログイン
+              </button>
+            </SignInButton>
+          </SignedOut>
+        </div>
         <nav className="mt-4 flex flex-col gap-1">
-          {navItems.map((item) => (
-            <Link
-              key={item.label}
-              href={item.href}
-              className="flex items-center gap-3 rounded-full px-4 py-3 text-base font-medium text-neutral-200 transition hover:bg-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
-            >
-              <span className="text-xl" aria-hidden>
-                {item.icon}
-              </span>
-              <span>{item.label}</span>
-            </Link>
-          ))}
+          {navItems.map((item) => {
+            const href = item.href === "/profile" ? profileHref : item.href;
+            return (
+              <Link
+                key={item.label}
+                href={href}
+                className="flex items-center gap-3 rounded-full px-4 py-3 text-base font-medium text-neutral-200 transition hover:bg-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500"
+              >
+                <span className="text-xl" aria-hidden>
+                  {item.icon}
+                </span>
+                <span>{item.label}</span>
+              </Link>
+            );
+          })}
         </nav>
         <button className="mt-6 rounded-full bg-sky-500 px-6 py-3 text-center text-base font-semibold text-white transition hover:bg-sky-400">
           {primaryActionLabel}
@@ -40,18 +68,31 @@ export function Sidebar({ brandLabel, primaryActionLabel, navItems }: SidebarPro
         className="fixed bottom-4 left-1/2 z-30 flex w-[calc(100%-2.5rem)] -translate-x-1/2 items-center justify-between overflow-x-auto rounded-full border border-neutral-800 bg-neutral-900/90 px-4 py-3 shadow-lg backdrop-blur md:hidden"
         aria-label="モバイルナビゲーション"
       >
-        {navItems.map((item) => (
-          <Link
-            key={item.label}
-            href={item.href}
-            className="flex min-w-[48px] flex-col items-center text-xs font-medium text-neutral-300 transition hover:text-sky-400"
-          >
-            <span className="text-lg" aria-hidden>
-              {item.icon}
-            </span>
-            <span className="sr-only">{item.label}</span>
-          </Link>
-        ))}
+        {navItems.map((item) => {
+          const href = item.href === "/profile" ? profileHref : item.href;
+          return (
+            <Link
+              key={item.label}
+              href={href}
+              className="flex min-w-[48px] flex-col items-center text-xs font-medium text-neutral-300 transition hover:text-sky-400"
+            >
+              <span className="text-lg" aria-hidden>
+                {item.icon}
+              </span>
+              <span className="sr-only">{item.label}</span>
+            </Link>
+          );
+        })}
+        <SignedIn>
+          <UserButton afterSignOutUrl="/" userProfileMode="modal" />
+        </SignedIn>
+        <SignedOut>
+          <SignInButton mode="modal">
+            <button className="rounded-full border border-sky-500 px-3 py-1 text-xs font-semibold text-sky-400 transition hover:bg-sky-500/10">
+              ログイン
+            </button>
+          </SignInButton>
+        </SignedOut>
       </nav>
     </>
   );

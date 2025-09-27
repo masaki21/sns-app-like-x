@@ -2,6 +2,7 @@ export type BasicUser = {
   id: string;
   name: string;
   handle: string;
+  avatarUrl?: string;
 };
 
 export type TimelineStats = {
@@ -17,6 +18,7 @@ export type TimelinePost = {
   time: string;
   content: string;
   stats: TimelineStats;
+  likedByMe?: boolean;
 };
 
 export type TrendTopic = {
@@ -80,6 +82,7 @@ export type ProfileSummary = BasicUser & {
     followers: number;
     following: number;
   };
+  isFollowing?: boolean;
 };
 
 export type SearchResult = {

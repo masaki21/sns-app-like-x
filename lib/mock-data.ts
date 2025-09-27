@@ -15,14 +15,54 @@ import type {
 const wait = (ms = 150) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const users = {
-  sora: { id: "u1", name: "Sora Ito", handle: "sora_dev" },
-  mina: { id: "u2", name: "Mina Studio", handle: "mina_ui" },
-  kenji: { id: "u3", name: "Kenji Analytics", handle: "kenji_data" },
-  haru: { id: "u4", name: "Haru Product", handle: "haru_pm" },
-  nao: { id: "u5", name: "Nao Frontend", handle: "nao_codes" },
-  datawave: { id: "u6", name: "DataWave", handle: "data_wave" },
-  yui: { id: "u7", name: "Yui UX", handle: "yui_ux" },
-  riku: { id: "u8", name: "Riku Backend", handle: "riku_backend" },
+  sora: {
+    id: "u1",
+    name: "Sora Ito",
+    handle: "sora_dev",
+    avatarUrl: "https://avatar.vercel.sh/sora",
+  },
+  mina: {
+    id: "u2",
+    name: "Mina Studio",
+    handle: "mina_ui",
+    avatarUrl: "https://avatar.vercel.sh/mina",
+  },
+  kenji: {
+    id: "u3",
+    name: "Kenji Analytics",
+    handle: "kenji_data",
+    avatarUrl: "https://avatar.vercel.sh/kenji",
+  },
+  haru: {
+    id: "u4",
+    name: "Haru Product",
+    handle: "haru_pm",
+    avatarUrl: "https://avatar.vercel.sh/haru",
+  },
+  nao: {
+    id: "u5",
+    name: "Nao Frontend",
+    handle: "nao_codes",
+    avatarUrl: "https://avatar.vercel.sh/nao",
+  },
+  datawave: {
+    id: "u6",
+    name: "DataWave",
+    handle: "data_wave",
+    avatarUrl: "https://avatar.vercel.sh/datawave",
+  },
+  yui: {
+    id: "u7",
+    name: "Yui UX",
+    handle: "yui_ux",
+    avatarUrl: "https://avatar.vercel.sh/yui",
+  },
+  riku: {
+    id: "u8",
+    name: "Riku Backend",
+    handle: "riku_backend",
+    avatarUrl: "https://avatar.vercel.sh/riku",
+  },
 };
 
 const timelinePosts: TimelinePost[] = [
@@ -33,6 +73,7 @@ const timelinePosts: TimelinePost[] = [
     content:
       "Appの初期セットアップが完了。次は認証まわりを整える予定。MVPのタイムラインが楽しみ。",
     stats: { replies: 12, reposts: 4, likes: 87, impressions: "5.2K" },
+    likedByMe: false,
   },
   {
     id: "2",
@@ -41,6 +82,7 @@ const timelinePosts: TimelinePost[] = [
     content:
       "新しいカードコンポーネントを作成。Tailwind v4 の @theme inline が便利すぎる。",
     stats: { replies: 7, reposts: 15, likes: 142, impressions: "8.1K" },
+    likedByMe: false,
   },
   {
     id: "3",
@@ -49,6 +91,7 @@ const timelinePosts: TimelinePost[] = [
     content:
       "週次 KPI を整理中。DAU と投稿数をダッシュボードで可視化できるようにする予定です。",
     stats: { replies: 3, reposts: 6, likes: 58, impressions: "3.4K" },
+    likedByMe: false,
   },
   {
     id: "4",
@@ -56,6 +99,7 @@ const timelinePosts: TimelinePost[] = [
     time: "8h",
     content: "βテスター向けアンケートの設計完了。オンボーディング体験の改善案をまとめました。",
     stats: { replies: 9, reposts: 2, likes: 64, impressions: "2.1K" },
+    likedByMe: false,
   },
   {
     id: "5",
@@ -63,6 +107,7 @@ const timelinePosts: TimelinePost[] = [
     time: "12h",
     content: "ダークテーマのアクセシビリティレビュー実施。コントラスト比の調整を進めています。",
     stats: { replies: 5, reposts: 3, likes: 92, impressions: "4.8K" },
+    likedByMe: false,
   },
   {
     id: "6",
@@ -70,6 +115,7 @@ const timelinePosts: TimelinePost[] = [
     time: "14h",
     content: "通知キューをRedisに差し替えたところ、遅延が40%改善されました。",
     stats: { replies: 11, reposts: 7, likes: 120, impressions: "9.6K" },
+    likedByMe: false,
   },
   {
     id: "7",
@@ -77,6 +123,7 @@ const timelinePosts: TimelinePost[] = [
     time: "16h",
     content: "モバイル向けのジェスチャー操作プロトタイプをFigmaで作成。来週ユーザーテスト予定。",
     stats: { replies: 6, reposts: 4, likes: 78, impressions: "3.9K" },
+    likedByMe: false,
   },
   {
     id: "8",
@@ -84,6 +131,7 @@ const timelinePosts: TimelinePost[] = [
     time: "1d",
     content: "OpenAPI スキーマを整理して tRPC と同期。フロント側の型安全性が上がりました。",
     stats: { replies: 10, reposts: 5, likes: 133, impressions: "11.2K" },
+    likedByMe: false,
   },
   {
     id: "9",
@@ -91,6 +139,7 @@ const timelinePosts: TimelinePost[] = [
     time: "1d",
     content: "投稿カードにアニメーションを追加してマイクロインタラクションを改善。小さな喜びを届けたい。",
     stats: { replies: 4, reposts: 6, likes: 101, impressions: "7.4K" },
+    likedByMe: false,
   },
   {
     id: "10",
@@ -98,6 +147,7 @@ const timelinePosts: TimelinePost[] = [
     time: "2d",
     content: "エンゲージメントレポートを自動生成するクエリを準備。来月のOKR レビューに間に合わせます。",
     stats: { replies: 8, reposts: 3, likes: 89, impressions: "6.1K" },
+    likedByMe: false,
   },
 ];
 
@@ -109,6 +159,7 @@ const mockReplies: Record<string, TimelinePost[]> = {
       time: "1h",
       content: "セットアップ完了おめでとうございます！ベータテスト楽しみです 👏",
       stats: { replies: 0, reposts: 1, likes: 42, impressions: "2.4K" },
+      likedByMe: false,
     },
     {
       id: "1-r2",
@@ -116,6 +167,7 @@ const mockReplies: Record<string, TimelinePost[]> = {
       time: "55m",
       content: "APIゲートウェイ周り、何かあれば声かけてください！",
       stats: { replies: 0, reposts: 0, likes: 15, impressions: "1.1K" },
+      likedByMe: false,
     },
   ],
   "2": [
@@ -125,6 +177,7 @@ const mockReplies: Record<string, TimelinePost[]> = {
       time: "3h",
       content: "Tailwind v4 のテーマ機能、ちょうど試してました！",
       stats: { replies: 1, reposts: 0, likes: 58, impressions: "3.0K" },
+      likedByMe: false,
     },
   ],
 };

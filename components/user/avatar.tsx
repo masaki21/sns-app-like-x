@@ -2,6 +2,7 @@ export type AvatarProps = {
   name: string;
   size?: "sm" | "md" | "lg";
   className?: string;
+  src?: string;
 };
 
 const sizeClassMap: Record<Required<AvatarProps>["size"], string> = {
@@ -10,7 +11,7 @@ const sizeClassMap: Record<Required<AvatarProps>["size"], string> = {
   lg: "h-16 w-16 text-lg",
 };
 
-export function Avatar({ name, size = "md", className = "" }: AvatarProps) {
+export function Avatar({ name, size = "md", className = "", src }: AvatarProps) {
   const initials = name
     .split(" ")
     .filter(Boolean)
@@ -21,10 +22,20 @@ export function Avatar({ name, size = "md", className = "" }: AvatarProps) {
 
   return (
     <div
-      className={`flex items-center justify-center rounded-full bg-sky-500/10 font-semibold text-sky-400 ${sizeClassMap[size]} ${className}`.trim()}
+      className={`flex items-center justify-center overflow-hidden rounded-full bg-sky-500/10 font-semibold text-sky-400 ${sizeClassMap[size]} ${className}`.trim()}
       aria-hidden
     >
-      {initials || "?"}
+      {src ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={src}
+          alt={name}
+          className="h-full w-full object-cover"
+          referrerPolicy="no-referrer"
+        />
+      ) : (
+        initials || "?"
+      )}
     </div>
   );
 }

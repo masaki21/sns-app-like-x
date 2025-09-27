@@ -1,4 +1,6 @@
 import Link from "next/link";
+
+import { LikeButton } from "@/components/timeline/like-button";
 import { Avatar } from "@/components/user/avatar";
 import type { TimelinePost } from "@/types/social";
 
@@ -24,6 +26,7 @@ export function PostCard({
             <Avatar
               name={post.author.name}
               size="sm"
+              src={post.author.avatarUrl}
               className="md:h-12 md:w-12 md:text-base"
             />
           </Link>
@@ -58,7 +61,11 @@ export function PostCard({
           <footer className="mt-3 flex flex-wrap items-center gap-4 text-sm text-neutral-500">
             <Reaction label="💬" value={post.stats.replies} />
             <Reaction label="🔁" value={post.stats.reposts} />
-            <Reaction label="❤️" value={post.stats.likes} />
+            <LikeButton
+              postId={post.id}
+              initialLiked={post.likedByMe ?? false}
+              initialCount={post.stats.likes}
+            />
             <Reaction label="👁️" value={post.stats.impressions} />
             <PostAction label="共有" />
           </footer>

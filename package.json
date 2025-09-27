@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "prisma:generate": "prisma generate",
@@ -13,11 +13,13 @@
     "prisma:seed": "prisma db seed"
   },
   "dependencies": {
+    "@clerk/nextjs": "^6.32.2",
     "@prisma/client": "^6.16.2",
     "@supabase/supabase-js": "^2.58.0",
     "next": "15.5.4",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "svix": "^1.76.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

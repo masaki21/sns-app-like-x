@@ -12,7 +12,8 @@ export default async function ProfileHandlePage({
 }: {
   params: { handle: string };
 }) {
-  const handle = params.handle.toLowerCase();
+  const { handle: rawHandle } = params;
+  const handle = rawHandle.toLowerCase();
 
   const data = await withFallback(
     () => getProfileFromDatabase(handle),
