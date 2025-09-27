@@ -1,7 +1,23 @@
+import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
-const DEFAULT_PROFILE_HANDLE = "sora_dev";
+import { prisma } from "@/lib/prisma";
 
-export default function ProfilePage() {
-  redirect(`/profile/${DEFAULT_PROFILE_HANDLE}`);
+export default async function ProfilePage() {
+  const { userId } = auth();
+
+  if (!userId) {
+    redirect("/sign-in?redirect_url=/profile");
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { handle: true },
+  });
+
+  if (user?.handle) {
+    redirect(`/profile/${user.handle}`);
+  }
+
+  redirect("/");
 }

@@ -1,3 +1,5 @@
+import { auth } from "@clerk/nextjs/server";
+
 import { prisma } from "@/lib/prisma";
 import { formatRelativeTime } from "@/lib/utils/time";
 import { formatImpressions } from "@/lib/utils/metric";
@@ -11,10 +13,12 @@ export type PostWithReplies = {
 export async function getPostWithRepliesFromDatabase(
   id: string,
 ): Promise<PostWithReplies | null> {
+  const { userId } = auth();
+
   const post = await prisma.post.findUnique({
     where: { id },
     include: {
-      author: true,
+      author: { include: { profile: true } },
       _count: {
         select: {
           likes: true,
@@ -23,7 +27,7 @@ export async function getPostWithRepliesFromDatabase(
       },
       replies: {
         include: {
-          author: true,
+          author: { include: { profile: true } },
           _count: {
             select: {
               likes: true,
@@ -40,11 +44,27 @@ export async function getPostWithRepliesFromDatabase(
     return null;
   }
 
+  const allPostIds = [post.id, ...post.replies.map((reply) => reply.id)];
+  let likedIds = new Set<string>();
+
+  if (userId && allPostIds.length > 0) {
+    const likedRecords = await prisma.postLike.findMany({
+      where: {
+        userId,
+        postId: { in: allPostIds },
+      },
+      select: { postId: true },
+    });
+
+    likedIds = new Set(likedRecords.map((record) => record.postId));
+  }
+
   const parent: TimelinePost = {
     id: post.id,
     author: {
       name: post.author.displayName,
       handle: post.author.handle,
+      avatarUrl: post.author.profile?.avatarUrl ?? undefined,
     },
     time: formatRelativeTime(post.createdAt),
     content: post.body,
@@ -54,6 +74,7 @@ export async function getPostWithRepliesFromDatabase(
       likes: post._count.likes ?? 0,
       impressions: formatImpressions(post._count.likes ?? 0),
     },
+    likedByMe: likedIds.has(post.id),
   };
 
   const replies: TimelinePost[] = post.replies.map((reply) => ({
@@ -61,6 +82,7 @@ export async function getPostWithRepliesFromDatabase(
     author: {
       name: reply.author.displayName,
       handle: reply.author.handle,
+      avatarUrl: reply.author.profile?.avatarUrl ?? undefined,
     },
     time: formatRelativeTime(reply.createdAt),
     content: reply.body,
@@ -70,6 +92,7 @@ export async function getPostWithRepliesFromDatabase(
       likes: reply._count.likes ?? 0,
       impressions: formatImpressions(reply._count.likes ?? 0),
     },
+    likedByMe: likedIds.has(reply.id),
   }));
 
   return { post: parent, replies };
